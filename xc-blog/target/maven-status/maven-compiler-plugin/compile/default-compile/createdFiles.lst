@@ -1,0 +1,3 @@
+com\xc\controller\BlogLoginController.class
+com\xc\config\SecurityConfig.class
+com\xc\filter\JwtAuthenticationTokenFilter.class

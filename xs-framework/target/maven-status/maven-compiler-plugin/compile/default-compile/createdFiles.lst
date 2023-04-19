@@ -9,12 +9,15 @@ com\xc\domain\entity\User.class
 com\xc\service\impl\CategoryServiceImpl.class
 com\xc\service\impl\UserDetailsServiceImpl.class
 com\xc\mapper\LinkMapper.class
+com\xc\utils\PathUtils.class
 com\xc\utils\WebUtils.class
 com\xc\utils\SecurityUtils.class
 com\xc\mapper\CategoryMapper.class
 com\xc\service\BlogLoginService.class
 com\xc\config\RedisConfig.class
+com\xc\service\impl\OssUploadService.class
 com\xc\domain\vo\BlogUserLoginVo.class
+com\xc\service\impl\CommentServiceImpl.class
 com\xc\handler\security\AccessDeniedHandlerImpl.class
 com\xc\domain\entity\LoginUser.class
 com\xc\service\UserService.class
@@ -23,6 +26,7 @@ com\xc\service\impl\ArticleServiceImpl.class
 com\xc\config\WebConfig.class
 com\xc\domain\vo\UserInfoVo.class
 com\xc\domain\entity\Comment.class
+com\xc\service\UploadService.class
 com\xc\domain\vo\LinkVo.class
 com\xc\service\impl\BlogLoginServiceImpl.class
 com\xc\mapper\UserMapper.class

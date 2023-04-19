@@ -1,3 +1,6 @@
 com\xc\controller\BlogLoginController.class
+com\xc\controller\CommentController.class
+com\xc\controller\UserController.class
 com\xc\config\SecurityConfig.class
+com\xc\controller\UploadController.class
 com\xc\filter\JwtAuthenticationTokenFilter.class

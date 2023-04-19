@@ -1,5 +1,6 @@
 package com.xc.controller;
 
+import com.xc.constants.SystemConstants;
 import com.xc.domain.ResponseResult;
 import com.xc.domain.entity.Comment;
 import com.xc.service.CommentService;
@@ -14,12 +15,17 @@ public class CommentController {
     private CommentService commentService;
 
     @GetMapping("/commentList")
-    public ResponseResult commentList(Long articleId, Integer pageNum, Integer pageSize){
-        return commentService.commentList(articleId,pageNum,pageSize);
+    public ResponseResult commentList(Long articleId,Integer pageNum,Integer pageSize){
+        return commentService.commentList(SystemConstants.ARTICLE_COMMENT,articleId,pageNum,pageSize);
     }
 
     @PostMapping
     public ResponseResult addComment(@RequestBody Comment comment){
         return commentService.addComment(comment);
+    }
+
+    @GetMapping("/linkCommentList")
+    public ResponseResult linkCommentList(Integer pageNum,Integer pageSize){
+        return commentService.commentList(SystemConstants.LINK_COMMENT,null,pageNum,pageSize);
     }
 }

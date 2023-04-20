@@ -24,3 +24,7 @@ oss:
   accessKey: UKeVj-T1qseVXtgOXZz1SpVNXIWxPrZE4wEmJIbt
   secretKey: ufBuRnXVbRHPfNfT20YRwkcG_zlEzUcGmxKu7ycI
   bucket: xxc-blog
+oss:
+  accessKey: UKeVj-T1qseVXtgOXZz1SpVNXIWxPrZE4wEmJIbt
+  secretKey: ufBuRnXVbRHPfNfT20YRwkcG_zlEzUcGmxKu7ycI
+  bucket: xxc-blog

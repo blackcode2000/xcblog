@@ -5,20 +5,25 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.xc.constants.SystemConstants;
 import com.xc.domain.ResponseResult;
+import com.xc.domain.dto.AddArticleDto;
 import com.xc.domain.entity.Article;
+import com.xc.domain.entity.ArticleTag;
 import com.xc.domain.entity.Category;
+import com.xc.domain.entity.Tag;
 import com.xc.domain.vo.ArticleDetailVo;
 import com.xc.domain.vo.ArticleListVo;
 import com.xc.domain.vo.HotArticleVo;
 import com.xc.domain.vo.PageVo;
 import com.xc.mapper.ArticleMapper;
 import com.xc.service.ArticleService;
+import com.xc.service.ArticleTagService;
 import com.xc.service.CategoryService;
 import com.xc.utils.BeanCopyUtils;
 import com.xc.utils.RedisCache;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -115,5 +120,47 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         //更新redis中对应 id的浏览量
         redisCache.incrementCacheMapValue("article:viewCount",id.toString(),1);
         return ResponseResult.okResult();
+    }
+
+    @Autowired
+    private ArticleTagService articleTagService;
+
+    @Override
+    @Transactional
+    public ResponseResult add(AddArticleDto articleDto) {
+        //添加 博客
+        Article article = BeanCopyUtils.copyBean(articleDto, Article.class);
+        save(article);
+
+
+        List<ArticleTag> articleTags = articleDto.getTags().stream()
+                .map(tagId -> new ArticleTag(article.getId(), tagId))
+                .collect(Collectors.toList());
+
+        //添加 博客和标签的关联
+        articleTagService.saveBatch(articleTags);
+        return ResponseResult.okResult();
+    }
+
+    @Override
+    public ResponseResult findArticle(Integer pageNum, Integer pageSize,String title,String summary) {
+        LambdaQueryWrapper<Article> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.like(Article::getTitle,title).like(Article::getSummary,summary);
+
+        Page<Article> page = new Page<>();
+        page.setCurrent(pageNum);
+        page.setSize(pageSize);
+        page(page, queryWrapper);
+        PageVo pageVo = new PageVo(page.getRecords(),page.getTotal());
+        return ResponseResult.okResult(pageVo);
+    }
+
+    @Override
+    public ResponseResult findById(Long id) {
+//        LambdaQueryWrapper<Article> wrapper = new LambdaQueryWrapper<>();
+//        wrapper.eq(Article::getId,id);
+        Article article = getById(id);
+        AddArticleDto articleDto =   BeanCopyUtils.copyBean(article,AddArticleDto.class);
+        return ResponseResult.okResult(articleDto);
     }
 }

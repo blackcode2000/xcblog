@@ -2,6 +2,7 @@ package com.xc.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.xc.domain.ResponseResult;
+import com.xc.domain.dto.AddArticleDto;
 import com.xc.domain.entity.Article;
 
 public interface ArticleService extends IService<Article> {
@@ -12,4 +13,10 @@ public interface ArticleService extends IService<Article> {
     ResponseResult getArticleDetail(Long id);
 
     ResponseResult updateViewCount(Long id);
+
+    ResponseResult add(AddArticleDto article);
+
+    ResponseResult findArticle(Integer pageNum, Integer pageSize,String title,String summary);
+
+    ResponseResult findById(Long id);
 }

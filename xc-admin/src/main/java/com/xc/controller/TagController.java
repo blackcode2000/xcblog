@@ -4,10 +4,13 @@ import com.xc.domain.ResponseResult;
 import com.xc.domain.dto.TagListDto;
 import com.xc.domain.entity.Tag;
 import com.xc.domain.vo.PageVo;
+import com.xc.domain.vo.TagVo;
 import com.xc.service.TagService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/content/tag")
@@ -27,4 +30,20 @@ public class TagController {
     public ResponseResult delTag(@PathVariable("id") Integer id){
         return tagService.delTag(id);
     }
+
+    @GetMapping("{id}")
+    public ResponseResult updateTag(@PathVariable("id") Long id){
+        return tagService.updateTag(id);
+    }
+    @PutMapping
+    public ResponseResult renewTag(Long id,String name,String remark){
+        return tagService.renewTag(id,name,remark);
+    }
+
+    @GetMapping("/listAllTag")
+    public ResponseResult listAllTag(){
+        List<TagVo> list = tagService.listAllTag();
+        return ResponseResult.okResult(list);
+    }
+
 }

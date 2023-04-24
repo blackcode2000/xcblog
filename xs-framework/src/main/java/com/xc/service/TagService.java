@@ -5,6 +5,9 @@ import com.xc.domain.ResponseResult;
 import com.xc.domain.dto.TagListDto;
 import com.xc.domain.entity.Tag;
 import com.xc.domain.vo.PageVo;
+import com.xc.domain.vo.TagVo;
+
+import java.util.List;
 
 
 /**
@@ -20,4 +23,10 @@ public interface TagService extends IService<Tag> {
     ResponseResult addtag(Tag tag);
 
     ResponseResult delTag(Integer id);
+
+    ResponseResult updateTag(Long id);
+
+    ResponseResult renewTag(Long id, String name, String remark);
+
+    List<TagVo> listAllTag();
 }

@@ -5,6 +5,8 @@ F:\bishe\xcblog\xc-blog\src\main\java\com\xc\config\SecurityConfig.java
 F:\bishe\xcblog\xc-blog\src\main\java\com\xc\controller\CommentController.java
 F:\bishe\xcblog\xc-blog\src\main\java\com\xc\controller\UserController.java
 F:\bishe\xcblog\xc-blog\src\main\java\com\xc\controller\BlogLoginController.java
+F:\bishe\xcblog\xc-blog\src\main\java\com\xc\job\UpdateViewCountJob.java
+F:\bishe\xcblog\xc-blog\src\main\java\com\xc\runner\ViewCountRunner.java
 F:\bishe\xcblog\xc-blog\src\main\java\com\xc\controller\UploadController.java
 F:\bishe\xcblog\xc-blog\src\main\java\com\xc\controller\LinkController.java
 F:\bishe\xcblog\xc-blog\src\main\java\com\xc\controller\ArticleController.java

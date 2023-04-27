@@ -18,15 +18,32 @@ import java.util.List;
  */
 public interface TagService extends IService<Tag> {
 
+    /**
+     *  分页查询标签
+     * @param pageNum
+     * @param pageSize
+     * @param tagListDto
+     * @return
+     */
     ResponseResult<PageVo> pageTagList(Integer pageNum, Integer pageSize, TagListDto tagListDto);
 
-    ResponseResult addtag(Tag tag);
+    /**
+     *  添加标签
+     * @param addTag
+     * @return
+     */
+    ResponseResult addTag(Tag addTag);
 
-    ResponseResult delTag(Integer id);
+    /**
+     *  删除标签
+     * @param id
+     * @return
+     */
+    ResponseResult deleteTagById(Long id);
 
-    ResponseResult updateTag(Long id);
+    ResponseResult getTagInfo(Long id);
 
-    ResponseResult renewTag(Long id, String name, String remark);
+    ResponseResult updateTagInfo(Tag tag);
 
     List<TagVo> listAllTag();
 }

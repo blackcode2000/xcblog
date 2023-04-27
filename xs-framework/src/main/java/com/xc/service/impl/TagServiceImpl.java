@@ -49,33 +49,29 @@ public class TagServiceImpl extends ServiceImpl<TagMapper, Tag> implements TagSe
     }
 
     @Override
-    public ResponseResult addtag(Tag tag) {
-        save(tag);
+    public ResponseResult addTag(Tag addTag) {
+        save(addTag);
         return ResponseResult.okResult();
     }
 
     @Override
-    public ResponseResult delTag(Integer id) {
+    public ResponseResult deleteTagById(Long id) {
+        removeById(id);
+        return ResponseResult.okResult();
+    }
+
+    @Override
+    public ResponseResult getTagInfo(Long id) {
         Tag tag = getById(id);
-        tag.setDelFlag(1);
-        save(tag);
-        return ResponseResult.okResult();
+
+        TagVo tagVo = BeanCopyUtils.copyBean(tag,TagVo.class);
+
+        return ResponseResult.okResult(tagVo);
     }
 
     @Override
-    public ResponseResult updateTag(Long id) {
-        QueryWrapper<Tag> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("id",id);
-        queryWrapper.select("id","name","remark");
-        List<Tag> list= tagService.list(queryWrapper);
-        return ResponseResult.okResult(list);
-    }
-
-    @Override
-    public ResponseResult renewTag(Long id, String name, String remark) {
-        UpdateWrapper<Tag> updateWrapper =new UpdateWrapper<>();
-        updateWrapper.eq("id",id).set("name",name).set("remark",remark);
-        update(null,updateWrapper);
+    public ResponseResult updateTagInfo(Tag tag) {
+        updateById(tag);
         return ResponseResult.okResult();
     }
 

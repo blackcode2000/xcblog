@@ -6,14 +6,13 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.xc.constants.SystemConstants;
 import com.xc.domain.ResponseResult;
 import com.xc.domain.dto.AddArticleDto;
+import com.xc.domain.dto.AdminArticleDto;
+import com.xc.domain.dto.ArticleDto;
 import com.xc.domain.entity.Article;
 import com.xc.domain.entity.ArticleTag;
 import com.xc.domain.entity.Category;
 import com.xc.domain.entity.Tag;
-import com.xc.domain.vo.ArticleDetailVo;
-import com.xc.domain.vo.ArticleListVo;
-import com.xc.domain.vo.HotArticleVo;
-import com.xc.domain.vo.PageVo;
+import com.xc.domain.vo.*;
 import com.xc.mapper.ArticleMapper;
 import com.xc.service.ArticleService;
 import com.xc.service.ArticleTagService;
@@ -24,6 +23,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -143,24 +143,58 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
     }
 
     @Override
-    public ResponseResult findArticle(Integer pageNum, Integer pageSize,String title,String summary) {
+    public ResponseResult getAllArticleList(Integer pageNum, Integer pageSize, ArticleDto articleDto) {
+        //1.根据文章标题(模糊查询)和摘要进行查询
         LambdaQueryWrapper<Article> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.like(Article::getTitle,title).like(Article::getSummary,summary);
-
-        Page<Article> page = new Page<>();
-        page.setCurrent(pageNum);
-        page.setSize(pageSize);
+        queryWrapper.like(StringUtils.hasText(articleDto.getTitle()), Article::getTitle, articleDto.getTitle());
+        queryWrapper.like(StringUtils.hasText(articleDto.getSummary()), Article::getSummary, articleDto.getSummary());
+//        2.规定文章是未发布状态不能显示
+        // queryWrapper.eq(Article::getStatus,SystemConstants.ARTICLE_STATUS_NORMAL);
+//        3.分页查询
+        Page<Article> page = new Page<>(pageNum, pageSize);
         page(page, queryWrapper);
-        PageVo pageVo = new PageVo(page.getRecords(),page.getTotal());
-        return ResponseResult.okResult(pageVo);
+
+//        3.将当前页中的Article对象转换为ArticleDetailsVo对象
+        List<Article> articles = page.getRecords();
+        List<ArticleDetailsVo> articleDetailsVos = BeanCopyUtils.copyBeanList(articles, ArticleDetailsVo.class);
+//        4.将LinkVo对象转换为LinkAdminVo对象
+        AdminArticleVo adminArticleVo = new AdminArticleVo(articleDetailsVos, page.getTotal());
+        return ResponseResult.okResult(adminArticleVo);
     }
 
     @Override
-    public ResponseResult findById(Long id) {
-//        LambdaQueryWrapper<Article> wrapper = new LambdaQueryWrapper<>();
-//        wrapper.eq(Article::getId,id);
+    public ResponseResult getArticleById(Long id) {
         Article article = getById(id);
-        AddArticleDto articleDto =   BeanCopyUtils.copyBean(article,AddArticleDto.class);
-        return ResponseResult.okResult(articleDto);
+        UpdateArticleVo updateArticleVo = BeanCopyUtils.copyBean(article,UpdateArticleVo.class);
+        // 根据文章id获取到文章标签列表
+        List<Long> tagList = articleTagService.getTagList(id);
+        updateArticleVo.setTags(tagList);
+        return ResponseResult.okResult(updateArticleVo);
     }
+
+    @Override
+    public ResponseResult updateArticleInfo(AdminArticleDto adminArticleDto) {
+        // 1.将AdminArticleDto对象转换为Article对象
+        Article article = BeanCopyUtils.copyBean(adminArticleDto, Article.class);
+        //  2.将博客的标签信息存入标签表
+//          2.1根据当前博客id获取到已有的标签列表
+        List<Long> tagList = articleTagService.getTagList(article.getId());
+//          2.2得到修改过后的标签列表
+        List<Long> tags = article.getTags();
+//          2.3遍历修改过后的标签列表，判断当前博客是否已经有此标签，没有则一条数据添加到sg_article_tag表中
+        for (Long tag:tags){
+            if (!tagList.contains(tag)){
+                articleTagService.save(new ArticleTag(article.getId(), tag));
+            }
+        }
+        updateById(article);
+        return ResponseResult.okResult();
+    }
+
+    @Override
+    public ResponseResult deleteArticleById(Long id) {
+        removeById(id);
+        return ResponseResult.okResult();
+    }
+
 }

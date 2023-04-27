@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class TagListDto {
-//    private Long id;
+    private Long id;
     private String name;
     private String remark;
 }

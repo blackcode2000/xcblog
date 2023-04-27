@@ -6,15 +6,14 @@ import com.xc.domain.ResponseResult;
 import com.xc.domain.entity.Category;
 import com.xc.domain.vo.CategoryVo;
 import com.xc.domain.vo.ExcelCategoryVo;
+import com.xc.domain.vo.PageVo;
 import com.xc.enums.AppHttpCodeEnum;
 import com.xc.service.CategoryService;
 import com.xc.utils.BeanCopyUtils;
 import com.xc.utils.WebUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
@@ -50,5 +49,44 @@ public class CategoryController {
             WebUtils.renderString(response, JSON.toJSONString(result));
         }
     }
-    
+    /**
+     * 获取分类列表
+     */
+    @GetMapping("/list")
+    public ResponseResult list(Category category, Integer pageNum, Integer pageSize) {
+        PageVo pageVo = categoryService.selectCategoryPage(category,pageNum,pageSize);
+        return ResponseResult.okResult(pageVo);
+    }
+    @PostMapping
+    public ResponseResult add(@RequestBody Category category){
+        categoryService.save(category);
+        return ResponseResult.okResult();
+    }
+
+    /**
+     *  修改分类：根据id获取分类详情
+     * @param id
+     * @return
+     */
+    @GetMapping(value = "/{id}")
+    public ResponseResult getInfo(@PathVariable(value = "id")Long id){
+        Category category = categoryService.getById(id);
+        return ResponseResult.okResult(category);
+    }
+
+    /**
+     *  修改分类：更新
+     * @param category
+     * @return
+     */
+    @PutMapping
+    public ResponseResult edit(@RequestBody Category category){
+        categoryService.updateById(category);
+        return ResponseResult.okResult();
+    }
+    @DeleteMapping(value = "/{id}")
+    public ResponseResult remove(@PathVariable(value = "id")Long id){
+        categoryService.removeById(id);
+        return ResponseResult.okResult();
+    }
 }

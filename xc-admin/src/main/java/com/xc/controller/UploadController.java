@@ -1,6 +1,7 @@
 package com.xc.controller;
 
 import com.xc.domain.ResponseResult;
+import com.xc.service.FileService;
 import com.xc.service.UploadService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,6 +16,8 @@ public class UploadController {
 
     @Autowired
     private UploadService uploadService;
+    @Autowired
+    private FileService fileService;
 
     @PostMapping("/upload")
     public ResponseResult uploadImg(@RequestParam("img") MultipartFile multipartFile) {

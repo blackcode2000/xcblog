@@ -8,6 +8,7 @@ import com.xc.utils.JwtUtil;
 import com.xc.utils.RedisCache;
 import com.xc.utils.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Primary;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -18,6 +19,7 @@ import java.util.Map;
 import java.util.Objects;
 
 @Service
+@Primary
 public class SystemLoginServiceImpl implements LoginService {
 
     @Autowired
